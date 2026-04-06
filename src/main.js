@@ -77,7 +77,7 @@ function analyzeSalesData(data, options) {
 
     const sellerIndex = Object.fromEntries(sellerStats.map(item => [item.id, item]));
 
-    const productIndex = Object.fromEntries(data.products.map(item => [item.SKU, item]));
+    const productIndex = Object.fromEntries(data.products.map(item => [item.sku, item]));
 
     // @TODO: Расчет выручки и прибыли для каждого продавца
     data.purchase_records.forEach(record => { // Чек 
@@ -88,7 +88,7 @@ function analyzeSalesData(data, options) {
         // Расчёт прибыли для каждого товара
         record.items.forEach(item => {
 
-            const product = productIndex[item.SKU];
+            const product = productIndex[item.sku];
             // Посчитать себестоимость (cost) товара как product.purchase_price, умноженную на количество товаров из чека
 
             const cost = product.purchase_price * item.quantity;
@@ -102,11 +102,11 @@ function analyzeSalesData(data, options) {
 
             seller.profit += profit;
             // Учёт количества проданных товаров
-            if (!seller.products_sold[item.SKU]) {
-                seller.products_sold[item.SKU] = 0;
+            if (!seller.products_sold[item.sku]) {
+                seller.products_sold[item.sku] = 0;
             }
             // По артикулу товара увеличить его проданное количество у продавца
-            seller.products_sold[item.SKU] += item.quantity;
+            seller.products_sold[item.sku] += item.quantity;
         });
     });
 
@@ -115,9 +115,9 @@ function analyzeSalesData(data, options) {
 
     // @TODO: Назначение премий на основе ранжирования
     sellerStats.forEach((seller, index) => {
-        seller.bonus = calculateBonusByProfit(index, sellerStats.length, seller);
+        seller.bonus = calculateBonus(index, sellerStats.length, seller);
         seller.top_products = Object.entries(seller.products_sold)
-            .map(([SKU, quantity]) => ({ SKU, quantity }))
+            .map(([sku, quantity]) => ({ sku, quantity }))
             .sort((a, b) => b.quantity - a.quantity)
             .slice(0, 10);
     })
