@@ -117,7 +117,7 @@ function analyzeSalesData(data, options) {
     });
 
     // @TODO: Сортировка продавцов по прибыли
-    sellerStats.toSorted((a, b) => b.profit - a.profit);
+    sellerStats.sort((a, b) => b.profit - a.profit);
 
     // @TODO: Назначение премий на основе ранжирования
     sellerStats.forEach((seller, index) => {
