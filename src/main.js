@@ -24,18 +24,12 @@ function calculateSimpleRevenue(purchase, _product) {
 function calculateBonusByProfit(index, total, seller) {
     const { profit } = seller;
     // @TODO: Расчет бонуса от позиции в рейтинге
-    if (index === 0) {
-        bonusIncrease = 15;
-    } else if (index < 3) {
-        bonusIncrease = 10;
-    } else if (index === total - 1) {
-        bonusIncrease = 0;
-    } else {
-        bonusIncrease = 5;
-    }
-
-    return profit * (bonusIncrease / 100);
+    if (index === 0) return profit * 0.15;
+    if (index < 3) return profit * 0.10;
+    if (index === total - 1) return 0;
+    return profit * 0.05;
 }
+
 
 /**
  * Функция для анализа данных продаж
@@ -109,7 +103,7 @@ function analyzeSalesData(data, options) {
             seller.profit += profit;
             // Учёт количества проданных товаров
             if (!seller.products_sold[item.SKU]) {
-                seller.products_sold[item.SKU] === 0;
+                seller.products_sold[item.SKU] = 0;
             }
             // По артикулу товара увеличить его проданное количество у продавца
             seller.products_sold[item.SKU] += item.quantity;
